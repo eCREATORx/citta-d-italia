@@ -9,7 +9,7 @@ $result = $telegram -> getWebhookUpdates();
 $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
 $name = $result["message"]["from"]["username"]; //Юзернейм пользователя
-$keyboard = [["Последние статьи"],["Картинка"],["Гифка"]]; //Клавиатура
+$keyboard = [["Венеция"],["Милан"],["Рим"],["Флоренция"]]; //Клавиатура
 
 if($text){
     if ($text == "/start") {
@@ -19,18 +19,18 @@ if($text){
     }elseif ($text == "/help") {
         $reply = "Информация с помощью.";
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
-    }elseif ($text == "Картинка") {
-        $url = "https://68.media.tumblr.com/6d830b4f2c455f9cb6cd4ebe5011d2b8/tumblr_oj49kevkUz1v4bb1no1_500.jpg";
-        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Описание." ]);
-    }elseif ($text == "Гифка") {
-        $url = "https://68.media.tumblr.com/bd08f2aa85a6eb8b7a9f4b07c0807d71/tumblr_ofrc94sG1e1sjmm5ao1_400.gif";
-        $telegram->sendDocument([ 'chat_id' => $chat_id, 'document' => $url, 'caption' => "Описание." ]);
-    }elseif ($text == "Последние статьи") {
-        $html=simplexml_load_file('http://netology.ru/blog/rss.xml');
-        foreach ($html->channel->item as $item) {
-            $reply .= "\xE2\x9E\xA1 ".$item->title." (<a href='".$item->link."'>читать</a>)\n";
-        }
-        $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'disable_web_page_preview' => true, 'text' => $reply ]);
+    }elseif ($text == "Венеция") {
+        $url = "https://www.cruisetradenews.com/wp-content/uploads/2019/08/venice-canal-1.jpg";
+        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Вененция" ]);
+    }elseif ($text == "Милан") {
+        $url = "https://34travel.me/media/upload/images/2016/march/milan_guide/new/IMG_6944.jpg";
+        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Милан" ]);
+    }elseif ($text == "Рим") {
+        $url = "https://www.telegraph.co.uk/content/dam/Travel/Destinations/Europe/Italy/Rome/rome-sunset-tiber-river-overview-city-guide.jpg";
+        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Рим" ]);
+    }elseif ($text == "Флоренция") {
+        $url = "https://specials-images.forbesimg.com/imageserve/852835136/960x0.jpg?fit=scale";
+        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Флоренция" ]);
     }else{
         $reply = "По запросу \"<b>".$text."</b>\" ничего не найдено.";
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode'=> 'HTML', 'text' => $reply ]);
