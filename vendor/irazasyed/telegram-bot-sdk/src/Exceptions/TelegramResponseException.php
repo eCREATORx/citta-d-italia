@@ -9,10 +9,14 @@ use Telegram\Bot\TelegramResponse;
  */
 class TelegramResponseException extends TelegramSDKException
 {
-    /** @var TelegramResponse The response that threw the exception. */
+    /**
+     * @var TelegramResponse The response that threw the exception.
+     */
     protected $response;
 
-    /** @var array Decoded response. */
+    /**
+     * @var array Decoded response.
+     */
     protected $responseData;
 
     /**
@@ -33,26 +37,13 @@ class TelegramResponseException extends TelegramSDKException
     }
 
     /**
-     * Checks isset and returns that or a default value.
-     *
-     * @param string $key
-     * @param mixed  $default
-     *
-     * @return mixed
-     */
-    protected function get($key, $default = null)
-    {
-        return $this->responseData[$key] ?? $default;
-    }
-
-    /**
      * A factory for creating the appropriate exception based on the response from Telegram.
      *
      * @param TelegramResponse $response The response that threw the exception.
      *
      * @return TelegramResponseException
      */
-    public static function create(TelegramResponse $response): self
+    public static function create(TelegramResponse $response)
     {
         $data = $response->getDecodedBody();
 
@@ -60,11 +51,28 @@ class TelegramResponseException extends TelegramSDKException
         $message = null;
         if (isset($data['ok'], $data['error_code']) && $data['ok'] === false) {
             $code = $data['error_code'];
-            $message = $data['description'] ?? 'Unknown error from API.';
+            $message = isset($data['description']) ? $data['description'] : 'Unknown error from API.';
         }
 
         // Others
         return new static($response, new TelegramOtherException($message, $code));
+    }
+
+    /**
+     * Checks isset and returns that or a default value.
+     *
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
+    private function get($key, $default = null)
+    {
+        if (isset($this->responseData[$key])) {
+            return $this->responseData[$key];
+        }
+
+        return $default;
     }
 
     /**
@@ -82,7 +90,7 @@ class TelegramResponseException extends TelegramSDKException
      *
      * @return string
      */
-    public function getErrorType(): string
+    public function getErrorType()
     {
         return $this->get('type', '');
     }
@@ -92,7 +100,7 @@ class TelegramResponseException extends TelegramSDKException
      *
      * @return string
      */
-    public function getRawResponse(): string
+    public function getRawResponse()
     {
         return $this->response->getBody();
     }
@@ -102,7 +110,7 @@ class TelegramResponseException extends TelegramSDKException
      *
      * @return array
      */
-    public function getResponseData(): array
+    public function getResponseData()
     {
         return $this->responseData;
     }
@@ -112,7 +120,7 @@ class TelegramResponseException extends TelegramSDKException
      *
      * @return TelegramResponse
      */
-    public function getResponse(): TelegramResponse
+    public function getResponse()
     {
         return $this->response;
     }

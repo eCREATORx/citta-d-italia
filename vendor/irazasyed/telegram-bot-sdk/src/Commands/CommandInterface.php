@@ -2,21 +2,28 @@
 
 namespace Telegram\Bot\Commands;
 
-use Telegram\Bot\Api;
-use Telegram\Bot\Objects\Update;
-
 /**
  * Interface CommandInterface.
  */
 interface CommandInterface
 {
-    public function getName(): string;
+    /**
+     * Process Inbound Command.
+     *
+     * @param $telegram
+     * @param $arguments
+     * @param $update
+     *
+     * @return mixed
+     */
+    public function make($telegram, $arguments, $update);
 
-    public function getAliases(): array;
-
-    public function getDescription(): string;
-
-    public function getArguments(): array;
-
-    public function make(Api $telegram, Update $update, array $entity);
+    /**
+     * Process the command.
+     *
+     * @param $arguments
+     *
+     * @return mixed
+     */
+    public function handle($arguments);
 }

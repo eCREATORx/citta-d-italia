@@ -13,11 +13,6 @@ class HelpCommand extends Command
     protected $name = 'help';
 
     /**
-     * @var array Command Aliases
-     */
-    protected $aliases = ['listcommands'];
-
-    /**
      * @var string Command Description
      */
     protected $description = 'Help command, Get a list of commands';
@@ -25,13 +20,12 @@ class HelpCommand extends Command
     /**
      * {@inheritdoc}
      */
-    public function handle()
+    public function handle($arguments)
     {
         $commands = $this->telegram->getCommands();
 
         $text = '';
         foreach ($commands as $name => $handler) {
-            /* @var Command $handler */
             $text .= sprintf('/%s - %s'.PHP_EOL, $name, $handler->getDescription());
         }
 

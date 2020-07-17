@@ -2,18 +2,25 @@
 
 namespace Telegram\Bot\Commands;
 
-use Illuminate\Support\Collection;
-use Telegram\Bot\Answers\Answerable;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Update;
 
 /**
  * Class Command.
+ *
+ *
+ * @method mixed replyWithMessage($use_sendMessage_parameters)       Reply Chat with a message. You can use all the sendMessage() parameters except chat_id.
+ * @method mixed replyWithPhoto($use_sendPhoto_parameters)           Reply Chat with a Photo. You can use all the sendPhoto() parameters except chat_id.
+ * @method mixed replyWithAudio($use_sendAudio_parameters)           Reply Chat with an Audio message. You can use all the sendAudio() parameters except chat_id.
+ * @method mixed replyWithVideo($use_sendVideo_parameters)           Reply Chat with a Video. You can use all the sendVideo() parameters except chat_id.
+ * @method mixed replyWithVoice($use_sendVoice_parameters)           Reply Chat with a Voice message. You can use all the sendVoice() parameters except chat_id.
+ * @method mixed replyWithDocument($use_sendDocument_parameters)     Reply Chat with a Document. You can use all the sendDocument() parameters except chat_id.
+ * @method mixed replyWithSticker($use_sendSticker_parameters)       Reply Chat with a Sticker. You can use all the sendSticker() parameters except chat_id.
+ * @method mixed replyWithLocation($use_sendLocation_parameters)     Reply Chat with a Location. You can use all the sendLocation() parameters except chat_id.
+ * @method mixed replyWithChatAction($use_sendChatAction_parameters) Reply Chat with a Chat Action. You can use all the sendChatAction() parameters except chat_id.
  */
 abstract class Command implements CommandInterface
 {
-    use Answerable;
-
     /**
      * The name of the Telegram command.
      * Ex: help - Whenever the user sends /help, this would be resolved.
@@ -22,30 +29,32 @@ abstract class Command implements CommandInterface
      */
     protected $name;
 
-    /** @var string[] Command Aliases - Helpful when you want to trigger command with more than one name. */
-    protected $aliases = [];
-
-    /** @var string The Telegram command description. */
+    /**
+     * @var string The Telegram command description.
+     */
     protected $description;
 
-    /** @var array Holds parsed command arguments */
-    protected $arguments = [];
-
-    /** @var string Command Argument Pattern */
-    protected $pattern = '';
-
-    /** @var array|null Details of the current entity this command is responding to - offset, length, type etc */
-    protected $entity;
+    /**
+     * @var Api Holds the Super Class Instance.
+     */
+    protected $telegram;
 
     /**
-     * Get the Command Name.
-     *
-     * The name of the Telegram command.
-     * Ex: help - Whenever the user sends /help, this would be resolved.
+     * @var string Arguments passed to the command.
+     */
+    protected $arguments;
+
+    /**
+     * @var Update Holds an Update object.
+     */
+    protected $update;
+
+    /**
+     * Get Command Name.
      *
      * @return string
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->name;
     }
@@ -57,7 +66,7 @@ abstract class Command implements CommandInterface
      *
      * @return Command
      */
-    public function setName(string $name): self
+    public function setName($name)
     {
         $this->name = $name;
 
@@ -65,39 +74,11 @@ abstract class Command implements CommandInterface
     }
 
     /**
-     * Get Command Aliases.
-     *
-     * Helpful when you want to trigger command with more than one name.
-     *
-     * @return array
-     */
-    public function getAliases(): array
-    {
-        return $this->aliases;
-    }
-
-    /**
-     * Set Command Aliases.
-     *
-     * @param string|array $aliases
-     *
-     * @return Command
-     */
-    public function setAliases($aliases): self
-    {
-        $this->aliases = is_array($aliases) ? $aliases : [$aliases];
-
-        return $this;
-    }
-
-    /**
      * Get Command Description.
-     *
-     * The Telegram command description.
      *
      * @return string
      */
-    public function getDescription(): string
+    public function getDescription()
     {
         return $this->description;
     }
@@ -109,7 +90,7 @@ abstract class Command implements CommandInterface
      *
      * @return Command
      */
-    public function setDescription(string $description): self
+    public function setDescription($description)
     {
         $this->description = $description;
 
@@ -117,89 +98,33 @@ abstract class Command implements CommandInterface
     }
 
     /**
-     * Get Arguments Description.
+     * Returns Telegram Instance.
      *
-     * Get Command Arguments.
-     *
-     * @return array
+     * @return Api
      */
-    public function getArguments(): array
+    public function getTelegram()
     {
-        return $this->arguments;
+        return $this->telegram;
     }
 
     /**
-     * Set Command Arguments.
+     * Returns Original Update.
      *
-     * @param array $arguments
-     *
-     * @return Command
+     * @return Update
      */
-    public function setArguments(array $arguments): self
+    public function getUpdate()
     {
-        $this->arguments = $arguments;
-
-        return $this;
+        return $this->update;
     }
 
     /**
-     * Get Command Arguments Pattern.
+     * Get Arguments passed to the command.
      *
      * @return string
      */
-    public function getPattern(): string
+    public function getArguments()
     {
-        return $this->pattern;
-    }
-
-    /**
-     * Get Command Arguments Pattern.
-     *
-     * @param string $pattern
-     *
-     * @return Command
-     */
-    public function setPattern(string $pattern): self
-    {
-        $this->pattern = $pattern;
-
-        return $this;
-    }
-
-    /**
-     * Process Inbound Command.
-     *
-     * @param Api    $telegram
-     * @param Update $update
-     * @param array  $entity
-     *
-     * @return mixed
-     */
-    public function make(Api $telegram, Update $update, array $entity)
-    {
-        $this->telegram = $telegram;
-        $this->update = $update;
-        $this->entity = $entity;
-        $this->arguments = $this->parseCommandArguments();
-
-        return call_user_func_array([$this, 'handle'], $this->getArguments());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    abstract public function handle();
-
-    /**
-     * Helper to Trigger other Commands.
-     *
-     * @param string $command
-     *
-     * @return mixed
-     */
-    protected function triggerCommand(string $command)
-    {
-        return $this->getCommandBus()->execute($command, $this->update, $this->entity);
+        return $this->arguments;
     }
 
     /**
@@ -207,140 +132,66 @@ abstract class Command implements CommandInterface
      *
      * @return CommandBus
      */
-    public function getCommandBus(): CommandBus
+    public function getCommandBus()
     {
         return $this->telegram->getCommandBus();
     }
 
     /**
-     * Parse Command Arguments.
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    protected function parseCommandArguments(): array
+    public function make($telegram, $arguments, $update)
     {
-        //Extract variable names from the supplied pattern
-        $required = $this->extractVariableNames('/\{([^\d]\w+?)\}/');
-        $optional = $this->extractVariableNames('/\{([^\d]\w+?)\?\}/');
-        $customRegex = $this->checkForCustomRegex($required, $optional);
+        $this->telegram = $telegram;
+        $this->arguments = $arguments;
+        $this->update = $update;
 
-        //Generate the regex needed to search for this pattern
-        $regex = $this->prepareRegex($required, $optional, $customRegex);
-        preg_match($regex, $this->relevantMessageSubString(), $matches);
-
-        return $this->formatMatches($matches, $required, $optional);
+        return $this->handle($arguments);
     }
 
     /**
-     * @param $regex
+     * Helper to Trigger other Commands.
      *
-     * @return Collection
+     * @param      $command
+     * @param null $arguments
+     *
+     * @return mixed
      */
-    private function extractVariableNames($regex)
+    protected function triggerCommand($command, $arguments = null)
     {
-        preg_match_all($regex, $this->pattern, $matches);
-
-        return collect($matches[1]);
+        return $this->getCommandBus()->execute($command, $arguments ?: $this->arguments, $this->update);
     }
 
     /**
-     * @param Collection $required
-     * @param Collection $optional
-     *
-     * @param string     $customRegex
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    private function prepareRegex(Collection $required, Collection $optional, $customRegex)
-    {
-        $optionalBotName = '(?:@.+?bot)?\s+?';
+    abstract public function handle($arguments);
 
-        if ($customRegex) {
-            $customRegex = "(?P<custom>$customRegex)";
+    /**
+     * Magic Method to handle all ReplyWith Methods.
+     *
+     * @param $method
+     * @param $arguments
+     *
+     * @return mixed|string
+     */
+    public function __call($method, $arguments)
+    {
+        $action = substr($method, 0, 9);
+        if ($action === 'replyWith') {
+            $reply_name = studly_case(substr($method, 9));
+            $methodName = 'send'.$reply_name;
+
+            if (!method_exists($this->telegram, $methodName)) {
+                return 'Method Not Found';
+            }
+
+            $chat_id = $this->update->getMessage()->getChat()->getId();
+            $params = array_merge(compact('chat_id'), $arguments[0]);
+
+            return call_user_func_array([$this->telegram, $methodName], [$params]);
         }
 
-        $required = $required
-            ->map(function ($varName) {
-                return "(?P<$varName>[^ ]++)";
-            })
-            ->implode('\s+?');
-
-        $optional = $optional
-            ->map(function ($varName) {
-                return "(?:\s+?(?P<$varName>[^ ]++))?";
-            })
-            ->implode('');
-
-        return "%/{$this->getName()}{$optionalBotName}{$required}{$optional}{$customRegex}%si";
-    }
-
-    private function formatMatches(array $matches, Collection $required, Collection $optional)
-    {
-        //Need to update Illuminate\Support to newer version to take advantage of
-        //intersectBykeys method on collections. Have to use this horrible array method until then!
-        return isset($matches) ? array_intersect_key(
-            $matches,
-            $required
-                ->merge($optional)
-                //incase this was a custom regex search we need to add a custom key
-                ->push('custom')
-                ->flip()
-                ->toArray()
-        ) : [];
-    }
-
-    private function checkForCustomRegex(Collection $required, Collection $optional)
-    {
-        if ($this->pattern && $required->isEmpty() && $optional->isEmpty()) {
-            return $this->pattern;
-        }
-
-        return '';
-    }
-
-    /**
-     * @return bool|string
-     */
-    private function relevantMessageSubString()
-    {
-        //Get all the bot_command offsets in the Update object
-        $commandOffsets = $this->allCommandOffsets();
-
-        //Extract the current offset for this command and, if it exists, the offset of the NEXT bot_command entity
-        $splice = $commandOffsets->splice(
-            $commandOffsets->search($this->entity['offset']),
-            2
-        );
-
-        return $splice->count() === 2 ? $this->cutTextBetween($splice) : $this->cutTextFrom($splice);
-    }
-
-    private function cutTextBetween(Collection $splice)
-    {
-        return substr(
-            $this->getUpdate()->getMessage()->text,
-            $splice->first(),
-            $splice->last() - $splice->first()
-        );
-    }
-
-    private function cutTextFrom(Collection $splice)
-    {
-        return substr(
-            $this->getUpdate()->getMessage()->text,
-            $splice->first()
-        );
-    }
-
-    /**
-     * @return Collection
-     */
-    private function allCommandOffsets()
-    {
-        return $this->getUpdate()->getMessage()->getEntities()
-            ->filter(function ($entity) {
-                return $entity['type'] === 'bot_command';
-            })
-            ->pluck('offset');
+        return 'Method Not Found';
     }
 }

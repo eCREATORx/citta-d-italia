@@ -6,11 +6,10 @@ namespace Telegram\Bot\Objects;
  * Class Contact.
  *
  *
- * @property string   $phoneNumber    Contact's phone number.
- * @property string   $firstName      Contact's first name.
- * @property string   $lastName       (Optional). Contact's last name.
- * @property int      $userId         (Optional). Contact's user identifier in Telegram.
- * @property string   $vcard          (Optional). Additional data about the contact in the form of a vCard.
+ * @method string   getPhoneNumber()    Contact's phone number.
+ * @method string   getFirstName()      Contact's first name.
+ * @method string   getLastName()       (Optional). Contact's last name.
+ * @method int      getUserId()         (Optional). Contact's user identifier in Telegram.
  */
 class Contact extends BaseObject
 {
