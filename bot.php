@@ -40,7 +40,7 @@ if($text){
         $client = new Client(array(
             'base_uri' => 'https://www.googleapis.com/customsearch/v1',
             'query'    => $q,
-            'timeout'  => 3.0,
+            'timeout'  => 60.0,
             'debug'    => false,
             'headers'  => array(
                 'Accept' => 'application/json'
@@ -50,10 +50,10 @@ if($text){
         // отправка запроса и получение результатов поиска
         $response = $client->request('GET');
         $results = json_decode($response->getBody()->getContents(), true);
-        $results = '"'.$results["items"][0]["link"].'"';
+        $results = $results["items"][0]["link"];
 
         $url = $results;
-        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Фотография города ".$text ]);
+        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Фотография города" ]);
     }else{
         $reply = "По запросу \"<b>".$text."</b>\" ничего не найдено.";
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode'=> 'HTML', 'text' => $reply ]);
