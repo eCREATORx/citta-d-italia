@@ -23,7 +23,7 @@ if($text){
         $reply = "Информация с помощью.";
         $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => false ]);
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
-    }elseif ($text == "Венеция" || "Милан" || "Рим" || "Флоренция") {
+    }elseif ($text == "Венеция") {
         // Формируем запрос
         $q = http_build_query(array(
             'key' => $key,
@@ -33,27 +33,35 @@ if($text){
             'imgType' => 'photo',
             'sort' => 'date:d:s',
             'num' => 1,
-            'q' => $text // запрос для поиска
+            'q' => "Венеция" // запрос для поиска
         ));
 
         // Инициализация клиента
         $client = new Client(array(
             'base_uri' => 'https://www.googleapis.com/customsearch/v1',
             'query'    => $q,
-            'timeout'  => 60.0,
+            'timeout'  => 60,
             'debug'    => false,
             'headers'  => array(
                 'Accept' => 'application/json'
             ),
         ));
 
-        // отправка запроса и получение результатов поиска
+        // Отправка запроса и получение результатов поиска
         $response = $client->request('GET');
         $results = json_decode($response->getBody()->getContents(), true);
-        $results = $results["items"][0]["link"];
+        $reply = '"'.$results["items"][0]["link"].'"';
 
-        $url = $results;
-        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Фотография города" ]);
+        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
+    }elseif ($text == "Милан") {
+        $url = "https://34travel.me/media/upload/images/2016/march/milan_guide/new/IMG_6944.jpg";
+        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Милан" ]);
+    }elseif ($text == "Рим") {
+        $url = "https://www.telegraph.co.uk/content/dam/Travel/Destinations/Europe/Italy/Rome/rome-sunset-tiber-river-overview-city-guide.jpg";
+        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Рим" ]);
+    }elseif ($text == "Флоренция") {
+        $url = "https://specials-images.forbesimg.com/imageserve/852835136/960x0.jpg?fit=scale";
+        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Флоренция" ]);
     }else{
         $reply = "По запросу \"<b>".$text."</b>\" ничего не найдено.";
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode'=> 'HTML', 'text' => $reply ]);
