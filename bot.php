@@ -12,7 +12,7 @@ $result = $telegram -> getWebhookUpdates();
 $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
 $name = $result["message"]["from"]["username"]; //Юзернейм пользователя
-$keyboard = [["Венеция"],["Милан"],["Рим"],["Флоренция"]]; //Клавиатура
+$keyboard = [["Бергамо"], ["Венеция"], ["Милан"], ["Палермо"], ["Рим"], ["Флоренция"]]; //Клавиатура
 
 if($text){
     if ($text == "/start") {
@@ -23,7 +23,7 @@ if($text){
         $reply = "Информация с помощью.";
         $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => false ]);
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
-    }elseif ($text == "Венеция" || "Милан" || "Рим" || "Флоренция") {
+    }elseif ($text == "Бергамо" || "Венеция" || "Милан" || "Палермо"|| "Рим" || "Флоренция") {
         // Формируем запрос
         $q = http_build_query(array(
             'key' => $key,
@@ -53,7 +53,7 @@ if($text){
         $url = $results["items"][0]["link"];
 
         $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => $text ]);
-    }elseif ($text != "Венеция" || "Милан" || "Рим" || "Флоренция") {
+    }else{
         $reply = "Подписка на город \"<b>".$text."</b>\" в данный момент недоступна";
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode'=> 'HTML', 'text' => $reply ]);
     }
