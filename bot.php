@@ -50,7 +50,7 @@ if($text){
         // Отправка запроса и получение результатов поиска
         $response = $client->request('GET');
         $results = json_decode($response->getBody()->getContents(), true);
-        $url = '"'.$results["items"][0]["link"].'"';
+        $url = $results["items"][0]["link"];
 
         $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Венеция" ]);
     }elseif ($text == "Милан") {
