@@ -53,7 +53,7 @@ if($text){
         $url = $results["items"][0]["link"];
 
         $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => $text ]);
-    }else{
+    }elseif ($text != "Венеция" || "Милан" || "Рим" || "Флоренция") {
         $reply = "Подписка на город \"<b>".$text."</b>\" в данный момент недоступна";
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode'=> 'HTML', 'text' => $reply ]);
     }
