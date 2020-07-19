@@ -33,7 +33,7 @@ if($text){
             'imgType' => 'photo',
             'sort' => 'date:d:s',
             'num' => 1,
-            'q' => "Венеция" // запрос для поиска
+            'q' => $text // запрос для поиска
         ));
 
         // Инициализация клиента
@@ -52,7 +52,7 @@ if($text){
         $results = json_decode($response->getBody()->getContents(), true);
         $url = $results["items"][0]["link"];
 
-        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Венеция" ]);
+        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => $text ]);
     }elseif ($text == "Милан") {
         $url = "https://34travel.me/media/upload/images/2016/march/milan_guide/new/IMG_6944.jpg";
         $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Милан" ]);
