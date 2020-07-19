@@ -50,9 +50,9 @@ if($text){
         // Отправка запроса и получение результатов поиска
         $response = $client->request('GET');
         $results = json_decode($response->getBody()->getContents(), true);
-        $reply = '"'.$results["items"][0]["link"].'"';
+        $url = '"'.$results["items"][0]["link"].'"';
 
-        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
+        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Венеция" ]);
     }elseif ($text == "Милан") {
         $url = "https://34travel.me/media/upload/images/2016/march/milan_guide/new/IMG_6944.jpg";
         $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Милан" ]);
