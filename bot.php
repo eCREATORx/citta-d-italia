@@ -1,6 +1,8 @@
 <?php
 
 include('vendor/autoload.php');
+require_once("libs/MysqliDb.php");
+require_once("libs/dbObject.php");
 use Telegram\Bot\Api;
 use GuzzleHttp\Client;
 
@@ -11,6 +13,7 @@ $key = 'AIzaSyAca6wkF2WEjAhKUxWG4j-puh4MixVnd9w';
 $cx = '007381751698148361103:jv6cuoyl1lu';
 
 $db = new MysqliDb('us-cdbr-east-02.cleardb.com', 'b869ac278f05ad', '1dfb91f0', 'heroku_f954956b083bef4');
+$db->autoReconnect = false;
 
 $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
@@ -20,10 +23,10 @@ $keyboard = [["Бергамо", "Венеция"], ["Милан", "Неапол�
 if($text){
     if ($text == "/start") {
         $reply = "Добро пожаловать в бота! Выберите город для подписки";
-        $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => false ]);
+        $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => true ]);
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply, 'reply_markup' => $reply_markup ]);
     }elseif ($text == "/help") {
-        $reply = "Информация с помощью.";
+        $reply = "Информация с помощью";
         $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => false ]);
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
     }elseif ($text == "Бергамо" || "Венеция" || "Милан" || "Палермо"|| "Рим" || "Флоренция") {
@@ -34,7 +37,6 @@ if($text){
             'searchType' => 'image',
             'imgSize' => 'xxlarge',
             'imgType' => 'photo',
-            'excludeTerms' => 'мебель',
             'num' => 1,
             'q' => $text // запрос для поиска
         ));
@@ -56,6 +58,12 @@ if($text){
         $url = $results["items"][0]["link"];
 
         $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => $text ]);
+
+        // Добавление в БД
+        $data = array("chat_id" => $chat_id,
+               "city" => $text
+        );
+        $id = $db->insert('subscriptions', $data);
     }
 }else{
     $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение" ]);
