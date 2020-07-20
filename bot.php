@@ -33,7 +33,7 @@ if($text){
             'cx'  => $cx,
             'searchType' => 'image',
             'imgType' => 'photo',
-            'dateRestrict' => d[1],
+            'sort' => date,
             'excludeTerms' => 'мебель',
             'num' => 1,
             'q' => $text // запрос для поиска
