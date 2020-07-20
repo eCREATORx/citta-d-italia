@@ -15,7 +15,7 @@ $db = new MysqliDb('us-cdbr-east-02.cleardb.com', 'b869ac278f05ad', '1dfb91f0', 
 $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
 $name = $result["message"]["from"]["username"]; //Юзернейм пользователя
-$keyboard = [["Бергамо"], ["Венеция"], ["Милан"], ["Палермо"], ["Рим"], ["Флоренция"]]; //Клавиатура
+$keyboard = [["Бергамо", "Венеция"], ["Милан", "Палермо"], ["Рим", "Флоренция"]]; //Клавиатура
 
 if($text){
     if ($text == "/start") {
@@ -56,15 +56,6 @@ if($text){
         $url = $results["items"][0]["link"];
 
         $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => $text ]);
-
-        //Добавление в БД
-        $data = Array("chat_id" => $chat_id,
-               "city" => $text,
-        );
-        $id = $db->insert('subscription', $data);
-        if($id){
-            $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Добавлено в бд" ]);
-        }
     }else{
         $reply = "Подписка на город \"<b>".$text."</b>\" в данный момент недоступна";
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode'=> 'HTML', 'text' => $reply ]);
