@@ -32,9 +32,9 @@ if($text){
             'key' => $key,
             'cx'  => $cx,
             'searchType' => 'image',
-            'imgSize' => 'xxlarge',
             'imgType' => 'photo',
-            'sort' => 'date:d',
+            'dateRestrict' => d[1],
+            'excludeTerms' => 'мебель',
             'num' => 1,
             'q' => $text // запрос для поиска
         ));
