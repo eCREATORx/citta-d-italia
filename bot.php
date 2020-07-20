@@ -5,14 +5,17 @@ use Telegram\Bot\Api;
 use GuzzleHttp\Client;
 
 $telegram = new Api('1016659380:AAFbs7DXrHGnd87S-4_-EF-7bXFeSmdV9bg');
+$result = $telegram -> getWebhookUpdates();
+
 $key = 'AIzaSyAca6wkF2WEjAhKUxWG4j-puh4MixVnd9w';
 $cx = '007381751698148361103:jv6cuoyl1lu';
-$result = $telegram -> getWebhookUpdates();
+
+$db = new MysqliDb('us-cdbr-east-02.cleardb.com', 'b869ac278f05ad', '1dfb91f0', 'heroku_f954956b083bef4');
 
 $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
 $name = $result["message"]["from"]["username"]; //Юзернейм пользователя
-$keyboard = [["Бергамо"], ["Венеция"], ["Милан"], ["Палермо"], ["Рим"], ["Флоренция"]]; //Клавиатура
+$keyboard = [["Бергамо", "Венеция"], ["Милан"], ["Палермо"], ["Рим"], ["Флоренция"]]; //Клавиатура
 
 if($text){
     if ($text == "/start") {
@@ -53,6 +56,12 @@ if($text){
         $url = $results["items"][0]["link"];
 
         $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => $text ]);
+
+        //Добавление в БД
+        $data = Array("chat_id" => $chat_id,
+               "city" => $text,
+        );
+        $id = $db->insert('subscription', $data);
     }else{
         $reply = "Подписка на город \"<b>".$text."</b>\" в данный момент недоступна";
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode'=> 'HTML', 'text' => $reply ]);

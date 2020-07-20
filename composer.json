@@ -2,6 +2,6 @@
     "require": {
         "irazasyed/telegram-bot-sdk": "2.0",
         "guzzlehttp/guzzle": "6.5.5",
-        "thingengineer/mysqli-database-class": "dev-master"
+        "thingengineer/mysqli-database-class": "^2.9"
     }
 }

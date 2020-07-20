@@ -927,23 +927,23 @@
     },
     {
         "name": "thingengineer/mysqli-database-class",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "v2.9.3",
+        "version_normalized": "2.9.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/ThingEngineer/PHP-MySQLi-Database-Class.git",
-            "reference": "42116651a88b57b03fd967bc57dd38f5094565d9"
+            "reference": "03dbce1c7f1c9def315ad8ef52e1f5c0a806d6ed"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/ThingEngineer/PHP-MySQLi-Database-Class/zipball/42116651a88b57b03fd967bc57dd38f5094565d9",
-            "reference": "42116651a88b57b03fd967bc57dd38f5094565d9",
+            "url": "https://api.github.com/repos/ThingEngineer/PHP-MySQLi-Database-Class/zipball/03dbce1c7f1c9def315ad8ef52e1f5c0a806d6ed",
+            "reference": "03dbce1c7f1c9def315ad8ef52e1f5c0a806d6ed",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2020-06-27T16:10:54+00:00",
+        "time": "2019-08-24T09:28:56+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {
