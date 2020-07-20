@@ -32,6 +32,7 @@ if($text){
             'key' => $key,
             'cx'  => $cx,
             'searchType' => 'image',
+            'imgSize' => 'xxlarge',
             'imgType' => 'photo',
             'sort' => date,
             'excludeTerms' => 'мебель',
