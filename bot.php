@@ -22,11 +22,11 @@ $keyboard = [["Бергамо", "Венеция"], ["Милан", "Неапол�
 
 if($text){
     if ($text == "/start") {
-        $reply = "Добро пожаловать в бота! Выберите город для подписки";
+        $reply = "Добро пожаловать в бота! Выберите город для подписки.";
         $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => true ]);
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply, 'reply_markup' => $reply_markup ]);
     }elseif ($text == "/help") {
-        $reply = "Информация с помощью";
+        $reply = "Информация с помощью.";
         $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => false ]);
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
     }elseif ($text == "Бергамо" || "Венеция" || "Милан" || "Палермо"|| "Рим" || "Флоренция") {
@@ -57,7 +57,7 @@ if($text){
         $results = json_decode($response->getBody()->getContents(), true);
         $url = $results["items"][0]["link"];
 
-        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => $text ]);
+        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Подписка на город ".$text." оформлена." ]);
 
         // Добавление в БД
         $data = array("chat_id" => $chat_id,
@@ -66,6 +66,6 @@ if($text){
         $id = $db->insert('subscriptions', $data);
     }
 }else{
-    $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение" ]);
+    $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение." ]);
 }
 ?>
