@@ -34,7 +34,7 @@ if($text){
             'searchType' => 'image',
             'imgSize' => 'xxlarge',
             'imgType' => 'photo',
-            'sort' => 'date:d:s',
+            'sort' => 'date',
             'num' => 1,
             'q' => $text // запрос для поиска
         ));
