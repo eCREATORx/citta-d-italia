@@ -34,7 +34,6 @@ if($text){
             'searchType' => 'image',
             'imgSize' => 'xxlarge',
             'imgType' => 'photo',
-            'sort' => date,
             'excludeTerms' => 'мебель',
             'num' => 1,
             'q' => $text // запрос для поиска
