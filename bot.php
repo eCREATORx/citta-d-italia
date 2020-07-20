@@ -1,8 +1,8 @@
 <?php
 
 include('vendor/autoload.php');
-require_once("libs/MysqliDb.php");
-require_once("libs/dbObject.php");
+require_once('vendor/thingengineer/mysqli-database-class/MysqliDb.php');
+require_once('vendor/thingengineer/mysqli-database-class/dbObject.php');
 use Telegram\Bot\Api;
 use GuzzleHttp\Client;
 
