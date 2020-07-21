@@ -66,7 +66,7 @@ if($text){
         $buttonYes = array('text' => 'Да', 'callback_data' => 'Да');
         $buttonNo = array('text' => 'Нет', 'callback_data' => 'Нет');
         $keyboardSub = array('inline_keyboard' => array(array($buttonYes, $buttonNo)));
-        $keyboardSub = json_encode($keyboardSub, TRUE);
+        $keyboardSub = json_encode($keyboardSub);
 
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply, 'reply_markup' => $keyboardSub ]);
 
