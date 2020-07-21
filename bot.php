@@ -65,12 +65,11 @@ if($text){
         $reply = "Желаете оформить подписку, чтобы ежедневно получать новые фото?";
         $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard_sub, 'resize_keyboard' => true, 'one_time_keyboard' => true ]);
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
-        if ($text == "Да") {
-            $data = array("chat_id" => $chat_id,
-                "city" => $city
-            );
-            $sub = $db->insert('subscriptions', $data);
-        }
+    }elseif ($text == "Да") {
+        $data = array("chat_id" => $chat_id,
+        "city" => $city
+        );
+        $sub = $db->insert('subscriptions', $data);
     }
 }else{
     $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение." ]);
