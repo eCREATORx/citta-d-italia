@@ -24,13 +24,13 @@ $keyboard_sub = [["Да", "Нет"]];
 if($text){
     if ($text == "/start") {
         $reply = "Добро пожаловать в бота! Выберите город для подписки.";
-        $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => false ]);
+        $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => true ]);
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply, 'reply_markup' => $reply_markup ]);
     }elseif ($text == "/help") {
         $reply = "Информация с помощью.";
         $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => false ]);
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
-    }elseif ($text == "Бергамо" || "Венеция" || "Милан" || "Палермо"|| "Рим" || "Флоренция") {
+    }elseif ($text == "Бергамо") || ($text == "Венеция") || ($text == "Милан") || ($text == "Палермо") || ($text == "Рим") || ($text == "Флоренция") {
         // Формируем запрос
         $q = http_build_query(array(
             'key' => $key,
@@ -59,16 +59,17 @@ if($text){
         $url = $results["items"][0]["link"];
 
         $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Фото по запросу ".$text."." ]);
+        $city = $text;
 
         // Добавление в БД
         $reply = "Желаете оформить подписку, чтобы ежедневно получать новые фото?";
-        $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard_sub, 'resize_keyboard' => true, 'one_time_keyboard' => false ]);
+        $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard_sub, 'resize_keyboard' => true, 'one_time_keyboard' => true ]);
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
         if ($text == "Да") {
             $data = array("chat_id" => $chat_id,
-                "city" => $text
+                "city" => $city
             );
-            $id = $db->insert('subscriptions', $data);
+            $sub = $db->insert('subscriptions', $data);
         }
     }
 }else{
