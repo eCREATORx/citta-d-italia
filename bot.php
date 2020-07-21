@@ -19,6 +19,7 @@ $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
 $name = $result["message"]["from"]["username"]; //Юзернейм пользователя
 $callback = $result["callback_query"]["data"]; //Ответ inline-кнопки
+$userId = $result['callback_query']['from']['id'];
 $keyboard = [["Бергамо", "Венеция"], ["Милан", "Неаполь"], ["Палермо", "Рим"], ["Турин", "Флоренция"]]; //Клавиатура
 
 if($text){
@@ -75,7 +76,7 @@ if($text){
                 "city" => $text
             );
             $sub = $db->insert('subscriptions', $data);
-            $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Подписка успешно оформлена!"]);
+            $telegram->sendMessage([ 'chat_id' => $userId, 'text' => "Подписка успешно оформлена!"]);
         }
     }
 }else{
