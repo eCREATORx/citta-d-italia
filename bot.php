@@ -19,7 +19,6 @@ $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
 $name = $result["message"]["from"]["username"]; //Юзернейм пользователя
 $keyboard = [["Бергамо", "Венеция"], ["Милан", "Неаполь"], ["Палермо", "Рим"], ["Турин", "Флоренция"]]; //Клавиатура
-$keyboard_sub = [["Да", "Нет"]];
 
 if($text){
     if ($text == "/start") {
@@ -63,8 +62,13 @@ if($text){
 
         // Добавление в БД
         $reply = "Желаете оформить подписку, чтобы ежедневно получать новые фото?";
-        $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard_sub, 'resize_keyboard' => true, 'one_time_keyboard' => true ]);
-        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
+
+        $buttonYes = array('text' => 'Да', 'callback_data' => 'Да');
+        $buttonNo = array('text' => 'Нет', 'callback_data' => 'Нет');
+        $keyboardSub = array('inline_keyboard' => array(array($buttonYes, $buttonNo)));
+        $keyboardSub = json_encode($keyboardSub, TRUE);
+
+        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply, 'reply_markup' => $keyboardSub ]);
     }elseif ($text == "Да") {
         $data = array("chat_id" => $chat_id,
         "city" => $city
