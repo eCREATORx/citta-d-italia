@@ -19,7 +19,7 @@ $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
 
 $chat_ids = $db->getValue("subscriptions", "chat_id", null);
-$chat_ids = implode($chat_ids)
+$chat_ids = implode($chat_ids);
 
 $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $chat_ids ]);
 ?>
