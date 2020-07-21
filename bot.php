@@ -72,11 +72,11 @@ if($text){
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply, 'reply_markup' => $keyboardSub ]);
 
         if ($callback == "Да") {
-            $data = array("chat_id" => $userId,
+            $data = array("chat_id" => $chat_id,
                 "city" => $text
             );
             $sub = $db->insert('subscriptions', $data);
-            $telegram->sendMessage([ 'chat_id' => $userId, 'text' => "Подписка успешно оформлена!"]);
+            $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Подписка успешно оформлена!"]);
         }
     }
 }else{
