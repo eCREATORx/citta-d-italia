@@ -61,7 +61,7 @@ if($text){
         $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Фото по запросу ".$text."." ]);
 
         // Добавление в БД
-        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Желаете оформить подписку, чтобы ежедневно получать новые фото?" ]);
+        $reply = "Желаете оформить подписку, чтобы ежедневно получать новые фото?";
         $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard_sub, 'resize_keyboard' => true, 'one_time_keyboard' => true ]);
         if ($text == "Да") {
             $data = array("chat_id" => $chat_id,
