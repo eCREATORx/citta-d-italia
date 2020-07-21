@@ -72,7 +72,7 @@ if($text){
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply, 'reply_markup' => $keyboardSub ]);
 
         if ($callback == "Да") {
-            $data = array("chat_id" => $chat_id,
+            $data = array("chat_id" => $userId,
                 "city" => $text
             );
             $sub = $db->insert('subscriptions', $data);
