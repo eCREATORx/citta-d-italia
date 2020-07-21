@@ -19,6 +19,7 @@ $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
 $name = $result["message"]["from"]["username"]; //Юзернейм пользователя
 $keyboard = [["Бергамо", "Венеция"], ["Милан", "Неаполь"], ["Палермо", "Рим"], ["Турин", "Флоренция"]]; //Клавиатура
+$keyboard_sub = [["Да", "Нет"]];
 
 if($text){
     if ($text == "/start") {
@@ -57,13 +58,17 @@ if($text){
         $results = json_decode($response->getBody()->getContents(), true);
         $url = $results["items"][0]["link"];
 
-        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Подписка на город ".$text." оформлена." ]);
+        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Фото по запросу ".$text."." ]);
 
         // Добавление в БД
-        $data = array("chat_id" => $chat_id,
-               "city" => $text
-        );
-        $id = $db->insert('subscriptions', $data);
+        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Желаете оформить подписку, чтобы ежедневно получать новые фото?" ]);
+        $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard_sub, 'resize_keyboard' => true, 'one_time_keyboard' => true ]);
+        if ($text == "Да") {
+            $data = array("chat_id" => $chat_id,
+                "city" => $text
+            );
+            $id = $db->insert('subscriptions', $data);
+        }
     }
 }else{
     $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение." ]);
