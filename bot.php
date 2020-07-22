@@ -63,18 +63,30 @@ if($text){
         // Добавление в БД
         $reply = "Желаете оформить подписку, чтобы ежедневно получать новые фото?";
 
-        $buttonYes = array('text' => 'Да', 'callback_data' => 'Да');
-        $buttonNo = array('text' => 'Нет', 'callback_data' => 'Нет');
-        $keyboardSub = array('inline_keyboard' => array(array($buttonYes, $buttonNo)));
-        $keyboardSub = json_encode($keyboardSub);
-
-        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply, 'reply_markup' => $keyboardSub ]);
-
-        $update = $telegram->getWebhookUpdates();
+        $update = $this->telegram->getWebhookUpdate();
 
         if ($update->isType('callback_query')) {
-            $telegram->sendMessage([ 'chat_id' => $update->callbackQuery->from->id, 'text' => $update->callbackQuery->data ]);
-        }   
+
+            $this->telegram->sendMessage([
+                'chat_id' => $update->callbackQuery->from->id,
+                'text' => $update->callbackQuery->data
+            ]);
+        } else {
+            $keyboard = Keyboard::make()
+                ->inline()
+                ->row(
+                    Keyboard::inlineButton([
+                        'text' => 'Test Btn',
+                        'callback_data' => 'callback_from_testbtn'
+                    ])
+                );
+
+            $this->telegram->sendMessage([
+                'chat_id' => $update->getMessage()->chat->id,
+                'text' => 'Text with inline button',
+                'reply_markup' => $keyboard
+            ]);
+        }  
     }
 }else{
     $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение." ]);
