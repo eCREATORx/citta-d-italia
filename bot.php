@@ -9,9 +9,6 @@ use GuzzleHttp\Client;
 $telegram = new Api('1016659380:AAFbs7DXrHGnd87S-4_-EF-7bXFeSmdV9bg');
 $result = $telegram -> getWebhookUpdates();
 
-$key = 'AIzaSyAca6wkF2WEjAhKUxWG4j-puh4MixVnd9w';
-$cx = '007381751698148361103:jv6cuoyl1lu';
-
 $db = new MysqliDb('us-cdbr-east-02.cleardb.com', 'b869ac278f05ad', '1dfb91f0', 'heroku_f954956b083bef4');
 $db->autoReconnect = false;
 
@@ -49,6 +46,9 @@ if($text){
 
 function getUrlAndSend($city)
 {
+    $key = 'AIzaSyAca6wkF2WEjAhKUxWG4j-puh4MixVnd9w';
+    $cx = '007381751698148361103:jv6cuoyl1lu';
+    
     // Формируем запрос
     $q = http_build_query(array(
         'key' => $key,
