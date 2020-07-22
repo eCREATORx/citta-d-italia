@@ -26,8 +26,8 @@ if($text){
         $reply = "Информация с помощью.";
         $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => false ]);
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
-    }elseif (($text == "Бергамо") || ($text == "Венеция") || ($text == "Милан") || ($text == "Палермо") || ($text == "Рим") || ($text == "Флоренция")) {
-        $url = getgetUrl($text);
+    }elseif (($text == "Бергамо") || ($text == "Венеция") || ($text == "Милан") || ($text == "Неаполь") || ($text == "Палермо") || ($text == "Рим") || ($text == "Флоренция")) {
+        $url = getUrl($text);
 
         $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Фото по запросу ".$city ]);
 
