@@ -4,6 +4,7 @@ include('vendor/autoload.php');
 require_once('vendor/thingengineer/mysqli-database-class/MysqliDb.php');
 require_once('vendor/thingengineer/mysqli-database-class/dbObject.php');
 use Telegram\Bot\Api;
+use Telegram\Bot\Keyboard\Keyboard;
 use GuzzleHttp\Client;
 
 $telegram = new Api('1016659380:AAFbs7DXrHGnd87S-4_-EF-7bXFeSmdV9bg');
@@ -69,21 +70,11 @@ if($text){
 
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply, 'reply_markup' => $keyboardSub ]);
 
-        $result = $telegram->getWebhookUpdates();
-        $result = json_decode($result, True);
+        $update = $telegram->getWebhookUpdates();
 
-        $callback_data = $result['callback_query']['data'];
-        $callback_id = $result['callback_query']['message']['chat']['id'];
-        $callback_message_id = $result['callback_query']['message']['message_id'];
-
-        if ($callback_data == "Да") {
-            $data = array("chat_id" => $callback_id,
-                "city" => $text
-            );
-            $sub = $db->insert('subscriptions', $data);
-            $telegram->sendMessage([ 'chat_id' => $callback_id, 'text' => "Подписка успешно оформлена!"]);
-        }
-    }
+        if ($update->isType('callback_query')) {
+            $telegram->sendMessage([ 'chat_id' => $update->callbackQuery->from->id, 'text' => $update->callbackQuery->data ]);
+        }   
 }else{
     $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение." ]);
 }
