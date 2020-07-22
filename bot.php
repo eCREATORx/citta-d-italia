@@ -75,6 +75,7 @@ if($text){
         if ($update->isType('callback_query')) {
             $telegram->sendMessage([ 'chat_id' => $update->callbackQuery->from->id, 'text' => $update->callbackQuery->data ]);
         }   
+    }
 }else{
     $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение." ]);
 }
