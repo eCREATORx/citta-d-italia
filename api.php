@@ -1,5 +1,7 @@
 <?php
 
+use GuzzleHttp\Client;
+
 function getUrl($text)
 {
     $key = 'AIzaSyAca6wkF2WEjAhKUxWG4j-puh4MixVnd9w';
