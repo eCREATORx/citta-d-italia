@@ -30,42 +30,52 @@ if($text){
         $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => false ]);
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
     }elseif (($text == "Бергамо") || ($text == "Венеция") || ($text == "Милан") || ($text == "Палермо") || ($text == "Рим") || ($text == "Флоренция")) {
-        // Формируем запрос
-        $q = http_build_query(array(
-            'key' => $key,
-            'cx'  => $cx,
-            'searchType' => 'image',
-            'imgSize' => 'xxlarge',
-            'imgType' => 'photo',
-            'num' => 1,
-            'q' => $text // запрос для поиска
-        ));
-
-        // Инициализация клиента
-        $client = new Client(array(
-            'base_uri' => 'https://www.googleapis.com/customsearch/v1',
-            'query'    => $q,
-            'timeout'  => 60,
-            'debug'    => false,
-            'headers'  => array(
-                'Accept' => 'application/json'
-            ),
-        ));
-
-        // Отправка запроса и получение результатов поиска
-        $response = $client->request('GET');
-        $results = json_decode($response->getBody()->getContents(), true);
-        $url = $results["items"][0]["link"];
-
-        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Подписка на город ".$text." оформлена." ]);
+        getUrlAndSend($text);
 
         // Добавление в БД
         $data = array("chat_id" => $chat_id,
                "city" => $text
         );
-        $id = $db->insert('subscriptions', $data);
+        $sub = $db->insert('subscriptions', $data);
+        if ($sub) {
+            $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Подписка на город ".$text." оформлена." ]);
+        } 
+    }else{
+        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Ваш запрос некорректен или подписка на данный город в текущее время невозможна." ]);
     }
 }else{
     $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение." ]);
+}
+
+function getUrlAndSend($city)
+{
+    // Формируем запрос
+    $q = http_build_query(array(
+        'key' => $key,
+        'cx'  => $cx,
+        'searchType' => 'image',
+        'imgSize' => 'xxlarge',
+        'imgType' => 'photo',
+        'num' => 1,
+        'q' => $city // запрос для поиска
+    ));
+
+    // Инициализация клиента
+    $client = new Client(array(
+        'base_uri' => 'https://www.googleapis.com/customsearch/v1',
+        'query'    => $q,
+        'timeout'  => 60,
+        'debug'    => false,
+        'headers'  => array(
+            'Accept' => 'application/json'
+        ),
+    ));
+
+    // Отправка запроса и получение результатов поиска
+    $response = $client->request('GET');
+    $results = json_decode($response->getBody()->getContents(), true);
+    $url = $results["items"][0]["link"];
+
+    $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Фото по запросу ".$city ]);
 }
 ?>
