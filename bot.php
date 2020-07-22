@@ -4,7 +4,6 @@ include('vendor/autoload.php');
 require_once('vendor/thingengineer/mysqli-database-class/MysqliDb.php');
 require_once('vendor/thingengineer/mysqli-database-class/dbObject.php');
 use Telegram\Bot\Api;
-use Telegram\Bot\Keyboard\Keyboard;
 use GuzzleHttp\Client;
 
 $telegram = new Api('1016659380:AAFbs7DXrHGnd87S-4_-EF-7bXFeSmdV9bg');
@@ -58,35 +57,13 @@ if($text){
         $results = json_decode($response->getBody()->getContents(), true);
         $url = $results["items"][0]["link"];
 
-        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Фото по запросу ".$text."." ]);
+        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Подписка на город ".$text." оформлена." ]);
 
         // Добавление в БД
-        $reply = "Желаете оформить подписку, чтобы ежедневно получать новые фото?";
-
-        $update = $telegram->getWebhookUpdate();
-
-        if ($update->isType('callback_query')) {
-
-            $telegram->sendMessage([
-                'chat_id' => $update->callbackQuery->from->id,
-                'text' => $update->callbackQuery->data
-            ]);
-        } else {
-            $keyboard = Keyboard::make()
-                ->inline()
-                ->row(
-                    Keyboard::inlineButton([
-                        'text' => 'Test Btn',
-                        'callback_data' => 'callback_from_testbtn'
-                    ])
-                );
-
-            $telegram->sendMessage([
-                'chat_id' => $update->getMessage()->chat->id,
-                'text' => 'Text with inline button',
-                'reply_markup' => $keyboard
-            ]);
-        }  
+        $data = array("chat_id" => $chat_id,
+               "city" => $text
+        );
+        $id = $db->insert('subscriptions', $data);
     }
 }else{
     $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение." ]);
