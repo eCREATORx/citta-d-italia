@@ -47,4 +47,5 @@ function schedule()
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $chat_id ]);
     }
 }
+
 ?>
