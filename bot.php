@@ -63,11 +63,11 @@ if($text){
         // Добавление в БД
         $reply = "Желаете оформить подписку, чтобы ежедневно получать новые фото?";
 
-        $update = $this->telegram->getWebhookUpdate();
+        $update = $telegram->getWebhookUpdate();
 
         if ($update->isType('callback_query')) {
 
-            $this->telegram->sendMessage([
+            $telegram->sendMessage([
                 'chat_id' => $update->callbackQuery->from->id,
                 'text' => $update->callbackQuery->data
             ]);
@@ -81,7 +81,7 @@ if($text){
                     ])
                 );
 
-            $this->telegram->sendMessage([
+            $telegram->sendMessage([
                 'chat_id' => $update->getMessage()->chat->id,
                 'text' => 'Text with inline button',
                 'reply_markup' => $keyboard
