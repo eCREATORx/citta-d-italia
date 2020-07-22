@@ -27,7 +27,9 @@ if($text){
         $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => false ]);
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
     }elseif (($text == "Бергамо") || ($text == "Венеция") || ($text == "Милан") || ($text == "Палермо") || ($text == "Рим") || ($text == "Флоренция")) {
-        getUrlAndSend($text);
+        $url = getgetUrl($text);
+
+        $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Фото по запросу ".$city ]);
 
         // Добавление в БД
         $data = array("chat_id" => $chat_id,
@@ -44,11 +46,11 @@ if($text){
     $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение." ]);
 }
 
-function getUrlAndSend($city)
+function getUrl($text)
 {
     $key = 'AIzaSyAca6wkF2WEjAhKUxWG4j-puh4MixVnd9w';
     $cx = '007381751698148361103:jv6cuoyl1lu';
-    
+
     // Формируем запрос
     $q = http_build_query(array(
         'key' => $key,
@@ -57,7 +59,7 @@ function getUrlAndSend($city)
         'imgSize' => 'xxlarge',
         'imgType' => 'photo',
         'num' => 1,
-        'q' => $city // запрос для поиска
+        'q' => $text // запрос для поиска
     ));
 
     // Инициализация клиента
@@ -76,6 +78,6 @@ function getUrlAndSend($city)
     $results = json_decode($response->getBody()->getContents(), true);
     $url = $results["items"][0]["link"];
 
-    $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Фото по запросу ".$city ]);
+    return $url;
 }
 ?>
