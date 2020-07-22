@@ -40,12 +40,4 @@ if($text){
     $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение." ]);
 }
 
-function schedule()
-{
-    $users = $db->getValue("subscriptions", "chat_id", null);
-    foreach ($users as $chat_id) {
-        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $chat_id ]);
-    }
-}
-
 ?>
