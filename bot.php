@@ -18,8 +18,9 @@ $db->autoReconnect = false;
 $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
 $name = $result["message"]["from"]["username"]; //Юзернейм пользователя
-$callback = $result["callback_query"]["data"]; //Ответ inline-кнопки
-$userId = $result['callback_query']['from']['id'];
+$callback_data = $result['callback_query']['data'];
+$callback_id = $result['callback_query']['message']['chat']['id'];
+$callback_message_id = $result['callback_query']['message']['message_id'];
 $keyboard = [["Бергамо", "Венеция"], ["Милан", "Неаполь"], ["Палермо", "Рим"], ["Турин", "Флоренция"]]; //Клавиатура
 
 if($text){
@@ -71,12 +72,12 @@ if($text){
 
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply, 'reply_markup' => $keyboardSub ]);
 
-        if ($callback == "Да") {
-            $data = array("chat_id" => $chat_id,
+        if ($callback_data == "Да") {
+            $data = array("chat_id" => $callback_id,
                 "city" => $text
             );
             $sub = $db->insert('subscriptions', $data);
-            $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Подписка успешно оформлена!"]);
+            $telegram->sendMessage([ 'chat_id' => $callback_id, 'text' => "Подписка успешно оформлена!"]);
         }
     }
 }else{
