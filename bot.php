@@ -7,14 +7,12 @@ require_once('api.php');
 use Telegram\Bot\Api;
 
 $telegram = new Api('1016659380:AAFbs7DXrHGnd87S-4_-EF-7bXFeSmdV9bg');
-$result = $telegram -> getWebhookUpdates();
+$result = $telegram->getWebhookUpdates();
 
 $db = new MysqliDb('us-cdbr-east-02.cleardb.com', 'b869ac278f05ad', '1dfb91f0', 'heroku_f954956b083bef4');
-$db->autoReconnect = false;
 
-$text = $result["message"]["text"]; //Текст сообщения
-$chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
-$name = $result["message"]["from"]["username"]; //Юзернейм пользователя
+$text = $result["message"]["text"]; // Текст сообщения
+$chat_id = $result["message"]["chat"]["id"]; // Уникальный идентификатор пользователя
 $keyboard = [["Бергамо", "Венеция"], ["Милан", "Неаполь"], ["Палермо", "Рим"], ["Турин", "Флоренция"]]; //Клавиатура
 
 if($text){
@@ -23,6 +21,7 @@ if($text){
         $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => true ]);
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply, 'reply_markup' => $reply_markup ]);
     }elseif (($text == "Бергамо") || ($text == "Венеция") || ($text == "Милан") || ($text == "Неаполь") || ($text == "Палермо") || ($text == "Рим") || ($text == "Флоренция")) {
+        // Получение ссылки и отправка фото
         $url = getUrl($text);
         $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Фото по запросу ".$text."."]);
 
@@ -39,5 +38,13 @@ if($text){
     }
 }else{
     $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение." ]);
+}
+
+function schedule()
+{
+    $users = $db->getValue("subscriptions", "chat_id", null);
+    foreach ($users as $chat_id) {
+        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $chat_id ]);
+    }
 }
 ?>
