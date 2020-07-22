@@ -5,7 +5,6 @@ require_once('vendor/thingengineer/mysqli-database-class/MysqliDb.php');
 require_once('vendor/thingengineer/mysqli-database-class/dbObject.php');
 require_once('api.php');
 use Telegram\Bot\Api;
-use GuzzleHttp\Client;
 
 $telegram = new Api('1016659380:AAFbs7DXrHGnd87S-4_-EF-7bXFeSmdV9bg');
 $result = $telegram -> getWebhookUpdates();
@@ -25,7 +24,6 @@ if($text){
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply, 'reply_markup' => $reply_markup ]);
     }elseif (($text == "Бергамо") || ($text == "Венеция") || ($text == "Милан") || ($text == "Неаполь") || ($text == "Палермо") || ($text == "Рим") || ($text == "Флоренция")) {
         $url = getUrl($text);
-
         $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Фото по запросу ".$text."."]);
 
         // Добавление в БД
