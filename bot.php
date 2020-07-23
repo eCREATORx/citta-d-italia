@@ -25,16 +25,30 @@ if($text){
         $url = getUrl($text);
         $telegram->sendPhoto([ 'chat_id' => $chat_id, 'photo' => $url, 'caption' => "Фото по запросу ".$text."."]);
 
-        // Добавление в БД
-        $data = array("chat_id" => $chat_id,
+        // Проверка наличия пользователя в БД
+        $db->where("chat_id", $chat_id);
+        if ($db->has("subscriptions")) {
+            // Обновление данных
+            $data = array("chat_id" => $chat_id,
                "city" => $text
-        );
-        $sub = $db->insert('subscriptions', $data);
-        if ($sub) {
+            );
+            $db->where("chat_id", $chat_id);
+            $sub = $db->update('subscriptions', $data);
+            if ($sub) {
+                $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Подписка на город ".$text." обновлена." ]);
+            }
+        }else{
+            // Добавление данных
+            $data = array("chat_id" => $chat_id,
+               "city" => $text
+            );
+            $sub = $db->insert('subscriptions', $data);
+            if ($sub) {
             $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Подписка на город ".$text." оформлена." ]);
-        } 
+            } 
+        }   
     }else{
-        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Ваш запрос некорректен или подписка на данный город в текущее время невозможна." ]);
+        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Ваш запрос некорректен или подписка на данный город в данный момент невозможна." ]);
     }
 }else{
     $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение." ]);
