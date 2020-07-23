@@ -14,7 +14,7 @@ function getUrl($text)
         'searchType' => 'image',
         'imgSize' => 'xxlarge',
         'imgType' => 'photo',
-        'sort' => 'date:r:20200723:',
+        'sort' => 'date:r:'.date('Ymd').':',
         'num' => 1,
         'q' => $text // запрос для поиска
     ));
