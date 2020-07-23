@@ -3,10 +3,10 @@
 require_once('vendor/thingengineer/mysqli-database-class/MysqliDb.php');
 require_once('vendor/thingengineer/mysqli-database-class/dbObject.php');
 
-$db = new MysqliDb('us-cdbr-east-02.cleardb.com', 'b869ac278f05ad', '1dfb91f0', 'heroku_f954956b083bef4');
-
 function addToDatabase($chatId, $city)
 {
+	$db = new MysqliDb('us-cdbr-east-02.cleardb.com', 'b869ac278f05ad', '1dfb91f0', 'heroku_f954956b083bef4');
+	
 	$data = array('chat_id' => $chatId,
         'city' => $city
     );
