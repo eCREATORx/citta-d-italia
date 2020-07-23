@@ -20,7 +20,7 @@ if($text){
         $reply = 'Добро пожаловать в бота! Выберите город для подписки.';
         $replyMarkup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => true ]);
         $telegram->sendMessage([ 'chat_id' => $chatId, 'text' => $reply, 'reply_markup' => $replyMarkup ]);
-    }elseif (($text == 'Бергамо') || ($text == 'Венеция') || ($text == 'Милан') || ($text == 'Неаполь') || ($text == 'Палермо') || ($text == 'Рим') || ($text == 'Флоренция')) {
+    }elseif (($text == 'Бергамо') || ($text == 'Венеция') || ($text == 'Милан') || ($text == 'Неаполь') || ($text == 'Палермо') || ($text == 'Рим') || ($text == 'Турин')|| ($text == 'Флоренция')) {
         // Получение ссылки и отправка фото
         $url = getUrl($text);
         $telegram->sendPhoto([ 'chat_id' => $chatId, 'photo' => $url, 'caption' => 'Фото по запросу '.$text.'.']);
