@@ -17,13 +17,13 @@ function addToDatabase($chatId, $city)
         $db->where('chat_id', $chatId);
         $sub = $db->update('subscriptions', $data);
         if ($sub) {
-            $responseFromDatabase = 'Подписка на город '.$city.' обновлена.' ]);
+            $responseFromDatabase = 'Подписка на город '.$city.' обновлена.';
         }
     }else{
         // Добавление данных
         $sub = $db->insert('subscriptions', $data);
         if ($sub) {
-        	$responseFromDatabase = 'Подписка на город '.$city.' оформлена.' ]);
+        	$responseFromDatabase = 'Подписка на город '.$city.' оформлена.';
         } 
     }
 
