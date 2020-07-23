@@ -4,8 +4,8 @@ use GuzzleHttp\Client;
 
 function getUrl($text)
 {
-    const KEY = 'AIzaSyAca6wkF2WEjAhKUxWG4j-puh4MixVnd9w';
-    const CX = '007381751698148361103:jv6cuoyl1lu';
+    define ('KEY', 'AIzaSyAca6wkF2WEjAhKUxWG4j-puh4MixVnd9w');
+    define ('CX', '007381751698148361103:jv6cuoyl1lu');
 
     // Формируем запрос
     $q = http_build_query(array(
