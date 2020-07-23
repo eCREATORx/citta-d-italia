@@ -2,13 +2,13 @@
 
 use GuzzleHttp\Client;
 
-function getUrl($text)
+function getPhotoUrlFromQuery($city)
 {
     define ('KEY', 'AIzaSyAca6wkF2WEjAhKUxWG4j-puh4MixVnd9w');
     define ('CX', '007381751698148361103:jv6cuoyl1lu');
 
     // Формируем запрос
-    $q = http_build_query(array(
+    $query = http_build_query(array(
         'key' => KEY,
         'cx'  => CX,
         'searchType' => 'image',
@@ -16,13 +16,13 @@ function getUrl($text)
         'imgType' => 'photo',
         'sort' => 'date:r:'.date('Ymd').':',
         'num' => 1,
-        'q' => $text // запрос для поиска
+        'q' => $city // запрос для поиска
     ));
 
     // Инициализация клиента
     $client = new Client(array(
         'base_uri' => 'https://www.googleapis.com/customsearch/v1',
-        'query'    => $q,
+        'query'    => $query,
         'timeout'  => 60,
         'debug'    => false,
         'headers'  => array(
