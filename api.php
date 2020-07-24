@@ -13,7 +13,6 @@ function getPhotoUrlFromQuery($city)
         'key' => KEY,
         'cx'  => CX,
         'searchType' => 'image',
-        'imgSize' => 'xxlarge',
         'sort' => 'date:r:'.date('Ymd').':',
         'num' => $maxNumberOfPhotos,
         'q' => $city // запрос для поиска
