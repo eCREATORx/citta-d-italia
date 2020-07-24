@@ -4,6 +4,7 @@ use GuzzleHttp\Client;
 
 function getPhotoUrlFromQuery($city)
 {
+    $maxNumberOfPhotos = 10;
     define ('KEY', 'AIzaSyAca6wkF2WEjAhKUxWG4j-puh4MixVnd9w');
     define ('CX', '007381751698148361103:jv6cuoyl1lu');
 
@@ -13,9 +14,8 @@ function getPhotoUrlFromQuery($city)
         'cx'  => CX,
         'searchType' => 'image',
         'imgSize' => 'xxlarge',
-        'imgType' => 'photo',
         'sort' => 'date:r:'.date('Ymd').':',
-        'num' => 1,
+        'num' => $maxNumberOfPhotos,
         'q' => $city // запрос для поиска
     ));
 
@@ -33,7 +33,7 @@ function getPhotoUrlFromQuery($city)
     // Отправка запроса и получение результатов поиска
     $response = $client->request('GET');
     $results = json_decode($response->getBody()->getContents(), true);
-    $url = $results['items'][0]['link'];
+    $url = $results['items'][rand(0, $maxNumberOfPhotos-1)]['link'];
 
     return $url;
 }
