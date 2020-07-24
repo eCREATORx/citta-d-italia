@@ -12,8 +12,7 @@ $text = $result['message']['text']; // Текст сообщения
 $chatId = $result['message']['chat']['id']; // Уникальный идентификатор пользователя
 
 $cityList = ['Бергамо', 'Венеция', 'Милан', 'Неаполь', 'Палермо', 'Рим', 'Турин', 'Флоренция'];
-$cityChunks = array_chunk($cityList, 2);
-$keyboard = $cityChunks; //Клавиатура
+$keyboard = array_chunk($cityList, 2); //Клавиатура
 
 if($text){
     if ($text === '/start') {
